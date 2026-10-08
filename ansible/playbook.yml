@@ -1,0 +1,28 @@
+---
+- name: Configure Web Server
+  hosts: containers
+  tasks:
+    - name: Ensure Nginx is installed
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Deploy custom portfolio webpage
+      copy:
+        dest: /var/www/html/index.html
+        content: |
+          <html>
+            <head><title>Portfolio</title></head>
+            <body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+              <h1>Provisioned by Terraform</h1>
+              <h2>Configured by Ansible</h2>
+              <p>Running locally via WSL and Docker.</p>
+              <p>That was easy, right?</p>
+            </body>
+          </html>
+
+    - name: Start Nginx Daemon
+      command: nginx
+      args:
+        creates: /var/run/nginx.pid
